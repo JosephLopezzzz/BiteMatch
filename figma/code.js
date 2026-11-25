@@ -64,14 +64,18 @@ async function buildPrototype() {
   const font = await getFonts();
   const assets = Object.fromEntries(Object.entries(prototypeData.images).map(([key, base64]) =>
     [key, figma.createImage(figma.base64Decode(base64)).hash]));
-  const page = figma.createPage();
-  page.name = 'BiteMatch · Clickable prototype';
+  const pageName = 'BiteMatch · Clickable prototype';
+  const page = figma.root.children.find(item => item.name === pageName) || figma.createPage();
+  page.name = pageName;
   await figma.setCurrentPageAsync(page);
+  const existing = new Map(page.children.filter(node => node.type === 'FRAME').map(node => [node.name, node]));
   const starts = [];
+  const failures = [];
   /** @type {FrameNode | undefined} */
   let firstScreen;
   let y = 0;
   let count = 0;
+  let links = 0;
   for (const { name, width, frames } of prototypeData.designs) {
     const nodes = new Map();
     const interactive = [];
@@ -79,24 +83,33 @@ async function buildPrototype() {
     const gap = 90;
     const tallest = Math.max(...frames.map(frame => frame.contentHeight));
     for (const [index, spec] of frames.entries()) {
-      const frame = figma.createFrame();
-      frame.name = name + ' / ' + String(index + 1).padStart(2, '0') + ' ' + spec.title;
-      frame.resize(width, spec.height);
-      frame.x = (index % columns) * (width + gap);
-      frame.y = y + Math.floor(index / columns) * (tallest + gap);
-      frame.fills = solid('rgb(255, 246, 235)');
-      frame.clipsContent = true;
-      frame.overflowDirection = spec.contentHeight > spec.height ? 'VERTICAL' : 'NONE';
-      const content = position(figma.createFrame(), frame, [0, 0, width, spec.contentHeight]);
-      content.name = 'Screen content';
-      content.fills = [];
-      content.clipsContent = false;
-      for (const layer of spec.layers) draw(content, layer, assets, font);
-      for (const hotspot of spec.hotspots) {
-        const target = position(figma.createRectangle(), content, hotspot.box);
-        target.name = 'Interaction · ' + hotspot.name.replace(/\s+/g, ' ').slice(0, 58);
-        target.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 }, opacity: 0.001 }];
-        interactive.push([target, hotspot]);
+      const frameName = name + ' / ' + String(index + 1).padStart(2, '0') + ' ' + spec.title;
+      const savedFrame = existing.get(frameName);
+      const frame = savedFrame || figma.createFrame();
+      const lastContent = frame.children.find(node => node.name === 'Screen content');
+      let content = lastContent?.type === 'FRAME' ? lastContent : undefined;
+      if (!content) {
+        frame.name = frameName;
+        frame.resize(width, spec.height);
+        frame.x = (index % columns) * (width + gap);
+        frame.y = y + Math.floor(index / columns) * (tallest + gap);
+        frame.fills = solid('rgb(255, 246, 235)');
+        frame.clipsContent = true;
+        frame.overflowDirection = spec.contentHeight > spec.height ? 'VERTICAL' : 'NONE';
+        content = position(figma.createFrame(), frame, [0, 0, width, spec.contentHeight]);
+        content.name = 'Screen content';
+        content.fills = [];
+        content.clipsContent = false;
+        for (const layer of spec.layers) draw(content, layer, assets, font);
+      }
+      const savedHotspots = content.children.filter(node => node.type === 'RECTANGLE' && node.name.startsWith('Interaction · '));
+      for (const [hotspotIndex, hotspot] of spec.hotspots.entries()) {
+        const target = savedHotspots[hotspotIndex] || position(figma.createRectangle(), content, hotspot.box);
+        if (!savedHotspots[hotspotIndex]) {
+          target.name = 'Interaction · ' + hotspot.name.replace(/\s+/g, ' ').slice(0, 58);
+          target.fills = [{ type: 'SOLID', color: { r: 0, g: 0, b: 0 }, opacity: 0.001 }];
+        }
+        interactive.push([target, hotspot, frame]);
       }
       nodes.set(spec.id, frame);
       if (spec.id === 'start') {
@@ -104,16 +117,21 @@ async function buildPrototype() {
         firstScreen ??= frame;
       }
     }
-    for (const [target, hotspot] of interactive) {
-      const destination = nodes.get(hotspot.target);
-      await target.setReactionsAsync([{
-        trigger: { type: hotspot.drag ? 'ON_DRAG' : 'ON_CLICK' },
-        actions: [{
-          type: 'NODE', destinationId: destination.id, navigation: 'NAVIGATE',
-          transition: { type: 'DISSOLVE', duration: 0.18, easing: { type: 'EASE_OUT' } },
-          preserveScrollPosition: false
-        }]
-      }]);
+    for (const [target, hotspot, frame] of interactive) {
+      try {
+        const destination = nodes.get(hotspot.target);
+        await target.setReactionsAsync([{
+          trigger: { type: hotspot.drag ? 'ON_DRAG' : 'ON_CLICK' },
+          actions: [{
+            type: 'NODE', destinationId: destination.id, navigation: 'NAVIGATE',
+            transition: { type: hotspot.drag ? 'SMART_ANIMATE' : 'DISSOLVE', duration: 0.18, easing: { type: 'EASE_OUT' } },
+            preserveScrollPosition: false
+          }]
+        }]);
+        links += 1;
+      } catch (error) {
+        failures.push(frame.name + ' → ' + target.name + ': ' + error.message);
+      }
     }
     y += Math.ceil(frames.length / columns) * (tallest + gap) + 140;
     count += nodes.size;
@@ -122,7 +140,14 @@ async function buildPrototype() {
   if (!firstScreen) throw new Error('The starting frame is missing.');
   page.selection = [firstScreen];
   figma.viewport.scrollAndZoomIntoView([firstScreen]);
-  figma.closePlugin('BiteMatch imported with ' + count + ' editable frames and two flows.');
+  if (failures.length) console.error('BiteMatch prototype connections:', failures);
+  const message = 'BiteMatch imported with ' + count + ' editable frames and two flows. ' + links + ' links created.';
+  if (failures.length) figma.notify(failures[0], { error: true, timeout: 60000 });
+  figma.closePlugin(message);
 }
 
-buildPrototype().catch(error => figma.closePlugin('BiteMatch could not import. ' + error.message));
+buildPrototype().catch(error => {
+  console.error(error);
+  figma.notify('BiteMatch could not import. ' + error.message, { error: true, timeout: 60000 });
+  figma.closePlugin();
+});
