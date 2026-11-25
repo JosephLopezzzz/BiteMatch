@@ -2,18 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#fff6eb">
   <title>BiteMatch — Find your next bite</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/brand/icon-192.png">
+  <link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
   <link rel="stylesheet" href="styles.css">
+  <script src="install.js" defer></script>
   <script src="prototype.js" defer></script>
 </head>
 <body>
   <header class="site-header">
     <img class="brand" src="assets/brand/bitematch-logo.png" width="156" height="52" alt="BiteMatch">
+    <button id="install-app" class="quiet install-app" type="button" hidden>Install app</button>
     <button id="restart" class="quiet" type="button" hidden>Start over</button>
   </header>
   <main id="app"></main>
   <p id="announcement" class="sr-only" role="status"></p>
+  <dialog id="install-guide" class="install-guide" aria-labelledby="install-guide-title">
+    <h2 id="install-guide-title">Install BiteMatch</h2>
+    <p id="install-instructions"></p>
+    <form method="dialog"><button class="action" type="submit">Got it</button></form>
+  </dialog>
 </body>
 </html>

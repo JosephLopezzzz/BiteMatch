@@ -1,8 +1,12 @@
 "use strict";
 
 const app = document.querySelector("#app");
+const siteHeader = document.querySelector(".site-header");
 const restart = document.querySelector("#restart");
 const announcement = document.querySelector("#announcement");
+const phoneLayout = matchMedia("(max-width: 820px), (hover: none) and (pointer: coarse) and (max-width: 1024px)");
+const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+const swipeThreshold = 65;
 const cues = [
   ["crispy", "Crispy", "🍘"], ["sweet", "Sweet", "🍯"], ["savory", "Savory", "🍲"],
   ["fresh", "Fresh", "🥭"], ["light", "Light", "🍃"], ["filling", "Filling", "🍚"],
@@ -114,8 +118,12 @@ function workspace(label, stage, title, description, content, extra = "") {
 function startPage() {
   return `<section class="welcome">
     <div class="welcome-copy">
-      <h1 id="screen-title" tabindex="-1">Find your<br><span class="accent">next bite.</span></h1>
-      <p class="lead">Tell us what sounds good and what fits today. We’ll help you pick something to eat.</p>
+      <h1 id="screen-title" tabindex="-1">
+        <span class="desktop-only">Find your<br><span class="accent">next bite.</span></span>
+        <span class="phone-only">What are you <span class="accent">craving?</span></span>
+      </h1>
+      <p class="lead desktop-only">Tell us what sounds good and what fits today. We’ll help you pick something to eat.</p>
+      <p class="lead phone-only">Crispy, sweet, or still figuring it out? Find a bite that fits today.</p>
       ${action("Help me pick " + arrow, "craving")}
       <p class="hint">Your answers stay in this session.</p>
     </div>
@@ -206,9 +214,10 @@ function why(food) {
 
 function emptyPage() {
   const exhausted = rankedFoods().length > 0;
+  const lastSkip = foods.find(food => food.id === session.skipped.at(-1));
   const alternatives = !session.broadened && realCues().length &&
     foods.some(food => eligible(food) && !session.skipped.includes(food.id));
-  const reason = exhausted ? "You’ve seen every match in this round."
+  const reason = exhausted ? `Skipped ${lastSkip.name}. You’ve seen every match in this round.`
     : session.allergyUnknown ? "This demo can’t assess the extra ingredient you selected."
     : atHome() ? "We couldn’t find a match using your selected ingredients and limits."
     : "We couldn’t find a match within the limits you set.";
@@ -229,21 +238,32 @@ function matchesPage() {
   const remaining = deckItems();
   const food = remaining[0];
   if (!food) return emptyPage();
+  const lastSkip = foods.find(item => item.id === session.skipped.at(-1));
   const refine = session.skipped.length >= 2 && !session.refine
     ? `<div class="refine"><h2>Would lighter or more filling sound better?</h2><div class="chips">
         ${choice("Lighter", "light", "refine", false)}${choice("More filling", "filling", "refine", false)}
         ${choice("Either", "either", "refine", false)}
       </div></div>` : "";
-  return workspace("Step 3 of 3 · Matches", 3, "Does this hit the spot?", "Swipe left to skip, or swipe right if this is your pick.",
+  return workspace("Step 3 of 3 · Matches", 3,
+    '<span class="desktop-only">Does this hit the spot?</span><span class="phone-only">Your next bite</span>',
+    '<span class="desktop-only">Swipe left to skip, or swipe right if this is your pick.</span><span class="phone-only"><span aria-hidden="true">↔</span> Swipe left or right to skip</span>',
     `<div class="panel deck step-in">${context()}${refine}
       <div class="card-meta"><span>${remaining.length} match${remaining.length === 1 ? "" : "es"} left</span>
         ${session.skipped.length ? quiet("Undo skip", "undo") : ""}</div>
-      <article id="food-card" class="food-card" aria-label="Current suggestion">
-        <img src="${photo(food)}" alt="${food.name}" draggable="false">
-        <div class="food-info"><h2>${food.name}</h2><p>${food.description}</p><p>${why(food)}</p>
-          <p class="facts">${facts(food)}</p></div>
-      </article>
-      <div class="deck-controls">${action("← Skip", "skip", "secondary")}${action("I’ll eat this " + arrow, "pick")}</div>
+      <div class="deck-stage" data-next="${remaining.length > 1}">
+        <article id="food-card" class="food-card" aria-label="Current suggestion">
+          <img src="${photo(food)}" alt="${food.name}" draggable="false">
+          <div class="swipe-feedback" aria-hidden="true">
+            <span class="swipe-progress">Swipe to skip</span>
+            <span class="swipe-ready">Release to skip</span>
+            <span class="swipe-done">Skipped</span>
+          </div>
+          <div class="food-info"><h2>${food.name}</h2><p>${food.description}</p><p>${why(food)}</p>
+            <p class="facts">${facts(food)}</p></div>
+        </article>
+      </div>
+      <div class="deck-controls">${action("Skip", "skip", "secondary")}${action("I’ll eat this " + arrow, "pick")}</div>
+      ${lastSkip ? `<p class="hint skip-receipt phone-only">Skipped ${lastSkip.name}. Swipe again or tap a button.</p>` : ""}
       <div class="edit-row">${quiet("Edit limits", "edit-limits")}${quiet("Edit craving", "craving")}</div>
       <p class="hint deck-note">Demo estimates per serving. Check actual prices and ingredients before choosing.</p>
     </div>`, "results");
@@ -271,6 +291,7 @@ const screen = {
 function render(focus = true) {
   app.innerHTML = screen[session.step]();
   restart.hidden = session.step === "start";
+  siteHeader.classList.toggle("in-session", session.step !== "start");
   const card = app.querySelector("#food-card");
   if (card) enableSwipe(card);
   if (focus) {
@@ -345,19 +366,22 @@ function selectOption(button) {
   }
 }
 
-function skip() {
+function skip(direction = -1) {
   const card = app.querySelector("#food-card");
   if (!card || moving) return;
   const food = deckItems()[0];
   moving = true;
+  card.style.setProperty("--exit-x", direction < 0 ? "-115%" : "115%");
+  card.style.setProperty("--exit-rotation", direction < 0 ? "-10deg" : "10deg");
+  card.classList.remove("dragging");
   card.classList.add("leaving");
-  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   window.setTimeout(() => {
     if (!app.contains(card)) return;
     session.skipped.push(food.id);
     go("matches");
-    announcement.textContent = deckItems()[0] ? `Next match: ${deckItems()[0].name}` : "You’ve reached the end of the matches.";
-  }, reduced ? 0 : 210);
+    const nextFood = deckItems()[0];
+    announcement.textContent = `Skipped ${food.name}. ${nextFood ? `Next match: ${nextFood.name}.` : "You’ve reached the end of the matches."}`;
+  }, reducedMotion.matches ? 0 : 240);
 }
 
 function pick() {
@@ -370,31 +394,43 @@ function enableSwipe(card) {
   let startX = 0;
   let startY = 0;
   let pointer = null;
+  let skipsBothWays = false;
   card.addEventListener("pointerdown", event => {
-    if (moving || event.button !== 0) return;
+    if (moving || pointer !== null || event.button !== 0) return;
     pointer = event.pointerId;
     startX = event.clientX;
     startY = event.clientY;
+    skipsBothWays = phoneLayout.matches;
     card.setPointerCapture(pointer);
     card.classList.add("dragging");
   });
+  const isHorizontal = (dx, dy) => Math.abs(dx) >= Math.abs(dy) * 1.4;
   card.addEventListener("pointermove", event => {
     if (pointer !== event.pointerId) return;
     const dx = event.clientX - startX;
-    card.style.setProperty("--drag-x", `${dx}px`);
-    card.style.setProperty("--drag-angle", `${dx / 19}deg`);
+    const horizontal = isHorizontal(dx, event.clientY - startY);
+    const shift = horizontal && !reducedMotion.matches ? dx : 0;
+    card.style.setProperty("--drag-x", `${shift}px`);
+    card.style.setProperty("--drag-angle", `${Math.max(-12, Math.min(12, shift / 19))}deg`);
+    if (skipsBothWays) {
+      card.dataset.swipe = horizontal && Math.abs(dx) >= swipeThreshold ? "ready"
+        : horizontal && Math.abs(dx) > 12 ? "moving" : "";
+    }
   });
   function release(event) {
     if (pointer !== event.pointerId) return;
     const dx = event.clientX - startX;
     const dy = event.clientY - startY;
     pointer = null;
+    if (event.type === "pointerup" && isHorizontal(dx, dy) && Math.abs(dx) >= swipeThreshold) {
+      if (dx < 0 || skipsBothWays) skip(Math.sign(dx));
+      else pick();
+      return;
+    }
     card.classList.remove("dragging");
     card.style.removeProperty("--drag-x");
     card.style.removeProperty("--drag-angle");
-    if (event.type !== "pointerup" || Math.abs(dx) < 65 || Math.abs(dx) < Math.abs(dy) * 1.4) return;
-    if (dx < 0) skip();
-    else pick();
+    delete card.dataset.swipe;
   }
   card.addEventListener("pointerup", release);
   card.addEventListener("pointercancel", release);
@@ -455,6 +491,7 @@ document.addEventListener("keydown", event => {
   if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
     event.preventDefault();
     if (event.key === "ArrowLeft") skip();
+    else if (phoneLayout.matches) skip(1);
     else pick();
   }
 });
