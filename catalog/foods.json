@@ -1,0 +1,1053 @@
+[
+  {
+    "id": "turon",
+    "name": "Banana turon",
+    "tags": [
+      "crispy",
+      "sweet",
+      "filling"
+    ],
+    "description": "A crackly wrapper around warm, sweet banana.",
+    "serving": "1 roll",
+    "kcal": [
+      160,
+      220
+    ],
+    "price": [
+      15,
+      35
+    ],
+    "ingredients": [
+      "banana",
+      "sugar",
+      "oil",
+      "wrapper"
+    ],
+    "allergens": [
+      "wheat"
+    ],
+    "steps": [
+      "Roll sliced banana and a little sugar in a spring roll wrapper.",
+      "Pan-fry until golden, then drain and let it cool briefly."
+    ],
+    "dishId": "turon",
+    "cuisine": "Filipino",
+    "aliases": [],
+    "ingredientReview": "incomplete",
+    "nutritionSource": {
+      "label": "BiteMatch demo estimate"
+    },
+    "priceSource": {
+      "label": "BiteMatch demo estimate",
+      "market": "PH",
+      "currency": "PHP"
+    },
+    "photo": {
+      "file": "turon",
+      "alt": "Banana turon",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "fried-chicken",
+    "dishId": "fried-chicken",
+    "name": "Fried chicken",
+    "aliases": [
+      "Crispy fried chicken"
+    ],
+    "cuisine": "Global",
+    "tags": [
+      "crispy",
+      "savory",
+      "filling"
+    ],
+    "serving": "1 piece",
+    "description": "Craggy fried breading with tender chicken inside.",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "fried-chicken",
+      "alt": "Golden fried chicken in a paper-lined basket",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "glazed-donut",
+    "dishId": "glazed-donut",
+    "name": "Glazed donut",
+    "aliases": [
+      "Doughnut",
+      "Ring doughnut"
+    ],
+    "cuisine": "Global",
+    "tags": [
+      "sweet",
+      "light"
+    ],
+    "serving": "1 ring donut",
+    "description": "Soft ring dough topped with a thin sugar glaze.",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "glazed-donut",
+      "alt": "Golden glazed ring donut on a pale plate",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "cheeseburger",
+    "dishId": "cheeseburger",
+    "name": "Cheeseburger",
+    "aliases": [
+      "Burger",
+      "Beef burger"
+    ],
+    "cuisine": "Global",
+    "tags": [
+      "savory",
+      "filling"
+    ],
+    "serving": "1 burger",
+    "description": "A beef patty and melted cheese in a soft bun.",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "cheeseburger",
+      "alt": "Classic cheeseburger with pickles in plain paper",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "french-fries",
+    "dishId": "french-fries",
+    "name": "French fries",
+    "aliases": [
+      "Fries",
+      "Chips"
+    ],
+    "cuisine": "Global",
+    "tags": [
+      "crispy",
+      "savory",
+      "light"
+    ],
+    "serving": "1 small order",
+    "description": "Golden potato sticks with salty, crisp edges.",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "french-fries",
+      "alt": "Golden shoestring fries in an unbranded paper sleeve",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "halo-halo",
+    "dishId": "halo-halo",
+    "name": "Halo-halo",
+    "aliases": [
+      "Filipino shaved ice"
+    ],
+    "cuisine": "Filipino",
+    "tags": [
+      "sweet",
+      "fresh",
+      "filling"
+    ],
+    "serving": "1 glass",
+    "description": "Shaved ice with milk, colorful mix-ins, and dessert toppings.",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "halo-halo",
+      "alt": "Layered Filipino halo-halo with ube ice cream and flan",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "chicken-nuggets",
+    "dishId": "chicken-nuggets",
+    "name": "Chicken nuggets",
+    "aliases": [],
+    "cuisine": "Global",
+    "tags": [
+      "crispy",
+      "savory",
+      "light"
+    ],
+    "serving": "1 small order",
+    "description": "Bite-sized fried chicken pieces with a crunchy coating.",
+    "sourceUrl": "https://www.7-eleven.com.ph/products-category/crunch-time/",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "chicken-nuggets",
+      "alt": "Golden chicken nuggets in an unbranded tray",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "ramen",
+    "dishId": "ramen",
+    "name": "Shoyu ramen",
+    "aliases": [
+      "Ramen",
+      "Japanese noodles"
+    ],
+    "cuisine": "Japanese",
+    "tags": [
+      "savory",
+      "filling"
+    ],
+    "serving": "1 bowl",
+    "description": "Japanese noodles in a soy-seasoned broth.",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "ramen",
+      "alt": "A bowl of shoyu ramen with scallions and an egg",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "banana-chips",
+    "name": "Banana chips",
+    "tags": [
+      "crispy",
+      "sweet",
+      "light"
+    ],
+    "description": "Thin banana slices with a sweet crunch.",
+    "serving": "1 small handful",
+    "kcal": [
+      140,
+      190
+    ],
+    "price": [
+      25,
+      55
+    ],
+    "ingredients": [
+      "banana",
+      "sugar",
+      "oil"
+    ],
+    "allergens": [],
+    "steps": [
+      "Slice a firm banana thinly.",
+      "Fry the slices until crisp, drain, and toss with a little sugar."
+    ],
+    "dishId": "banana-chips",
+    "cuisine": "Filipino",
+    "aliases": [],
+    "ingredientReview": "listed",
+    "nutritionSource": {
+      "label": "BiteMatch demo estimate"
+    },
+    "priceSource": {
+      "label": "BiteMatch demo estimate",
+      "market": "PH",
+      "currency": "PHP"
+    },
+    "photo": {
+      "file": "banana-chips",
+      "alt": "Banana chips",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "potatoes",
+    "name": "Crispy potato bites",
+    "tags": [
+      "crispy",
+      "savory",
+      "filling"
+    ],
+    "description": "Golden, salty edges with a soft potato center.",
+    "serving": "1 small bowl",
+    "kcal": [
+      190,
+      280
+    ],
+    "price": [
+      45,
+      85
+    ],
+    "ingredients": [
+      "potato",
+      "oil",
+      "salt"
+    ],
+    "allergens": [],
+    "steps": [
+      "Cut the potato into small cubes and pat them dry.",
+      "Pan-fry until golden on all sides, then season with salt."
+    ],
+    "dishId": "potatoes",
+    "cuisine": "Filipino",
+    "aliases": [],
+    "ingredientReview": "listed",
+    "nutritionSource": {
+      "label": "BiteMatch demo estimate"
+    },
+    "priceSource": {
+      "label": "BiteMatch demo estimate",
+      "market": "PH",
+      "currency": "PHP"
+    },
+    "photo": {
+      "file": "potatoes",
+      "alt": "Crispy potato bites",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "rice",
+    "name": "Garlic fried rice",
+    "tags": [
+      "savory",
+      "filling"
+    ],
+    "description": "A cozy bowl of sinangag with toasted garlic.",
+    "serving": "1 small bowl",
+    "kcal": [
+      230,
+      340
+    ],
+    "price": [
+      35,
+      75
+    ],
+    "ingredients": [
+      "rice",
+      "garlic",
+      "oil",
+      "salt"
+    ],
+    "allergens": [],
+    "steps": [
+      "Sauté chopped garlic in a little oil.",
+      "Add cooked rice, stir over high heat, and season with salt."
+    ],
+    "dishId": "rice",
+    "cuisine": "Filipino",
+    "aliases": [
+      "Sinangag"
+    ],
+    "ingredientReview": "listed",
+    "nutritionSource": {
+      "label": "BiteMatch demo estimate"
+    },
+    "priceSource": {
+      "label": "BiteMatch demo estimate",
+      "market": "PH",
+      "currency": "PHP"
+    },
+    "photo": {
+      "file": "rice",
+      "alt": "Garlic fried rice",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "mango",
+    "name": "Chilled ripe mango",
+    "tags": [
+      "sweet",
+      "fresh",
+      "light"
+    ],
+    "description": "Cool, juicy slices of ripe mango.",
+    "serving": "1 small bowl",
+    "kcal": [
+      95,
+      150
+    ],
+    "price": [
+      30,
+      70
+    ],
+    "ingredients": [
+      "mango"
+    ],
+    "allergens": [],
+    "steps": [
+      "Slice a ripe mango and chill it for a few minutes.",
+      "Scoop the flesh into a bowl."
+    ],
+    "dishId": "mango",
+    "cuisine": "Filipino",
+    "aliases": [],
+    "ingredientReview": "listed",
+    "nutritionSource": {
+      "label": "BiteMatch demo estimate"
+    },
+    "priceSource": {
+      "label": "BiteMatch demo estimate",
+      "market": "PH",
+      "currency": "PHP"
+    },
+    "photo": {
+      "file": "mango",
+      "alt": "Chilled ripe mango",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "kcal": [
+      159,
+      159
+    ],
+    "allergens": [],
+    "id": "boiled-saba",
+    "name": "Nilagang saba",
+    "aliases": [
+      "Boiled saba bananas"
+    ],
+    "tags": [
+      "sweet",
+      "light"
+    ],
+    "description": "A simple Filipino snack of soft, naturally sweet boiled saba bananas.",
+    "serving": "100 g peeled",
+    "ingredients": [
+      "saba"
+    ],
+    "nutritionSource": {
+      "label": "DOST-FNRI PhilFCT E015",
+      "url": "https://i.fnri.dost.gov.ph/fct/library/report/3597"
+    },
+    "steps": [
+      "Rinse saba bananas and boil them in water with their peels on until tender.",
+      "Drain and cool slightly. Peel before serving."
+    ],
+    "dishId": "boiled-saba",
+    "cuisine": "Filipino",
+    "price": null,
+    "ingredientReview": "listed",
+    "photo": {
+      "file": "boiled-saba",
+      "alt": "Boiled short saba bananas with one peeled on a cream plate",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "kcal": [
+      122,
+      122
+    ],
+    "allergens": [],
+    "id": "purple-kamote",
+    "name": "Nilagang kamoteng murado",
+    "aliases": [
+      "Boiled purple sweet potato",
+      "Nilagang kamote"
+    ],
+    "tags": [
+      "sweet",
+      "filling"
+    ],
+    "description": "Tender purple sweet potato served plain as merienda.",
+    "serving": "100 g edible portion",
+    "ingredients": [
+      "purple-sweet-potato"
+    ],
+    "nutritionSource": {
+      "label": "DOST-FNRI PhilFCT B010",
+      "url": "https://i.fnri.dost.gov.ph/fct/library/report/3177"
+    },
+    "steps": [
+      "Scrub and cut the sweet potato into even pieces.",
+      "Boil until fork tender, then drain. Serve plain."
+    ],
+    "dishId": "purple-kamote",
+    "cuisine": "Filipino",
+    "price": null,
+    "ingredientReview": "listed",
+    "photo": {
+      "file": "purple-kamote",
+      "alt": "Chunks of boiled purple sweet potato with bright violet interiors",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "kcal": null,
+    "allergens": [],
+    "id": "fried-saba",
+    "name": "Pritong saba",
+    "aliases": [
+      "Fried saba bananas"
+    ],
+    "tags": [
+      "sweet",
+      "crispy"
+    ],
+    "description": "Pan-fried saba slices with golden edges and a light sugar glaze.",
+    "serving": "1 small plate",
+    "ingredients": [
+      "saba",
+      "sugar",
+      "oil"
+    ],
+    "steps": [
+      "Peel ripe saba and slice lengthwise.",
+      "Pan-fry in a little canola oil until golden on both sides. Drain and sprinkle lightly with sugar."
+    ],
+    "dishId": "fried-saba",
+    "cuisine": "Filipino",
+    "price": null,
+    "ingredientReview": "listed",
+    "photo": {
+      "file": "fried-saba",
+      "alt": "Golden shallow-fried saba slices on a pale plate",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "kcal": null,
+    "allergens": [],
+    "id": "sweet-corn",
+    "name": "Nilagang mais",
+    "aliases": [
+      "Boiled sweet corn"
+    ],
+    "tags": [
+      "sweet",
+      "light"
+    ],
+    "description": "Plain, juicy sweet corn on the cob.",
+    "serving": "1 cob",
+    "ingredients": [
+      "sweet-corn"
+    ],
+    "steps": [
+      "Remove the husk and silk from the corn.",
+      "Boil in water until tender, then drain and serve plain."
+    ],
+    "dishId": "sweet-corn",
+    "cuisine": "Filipino",
+    "price": null,
+    "ingredientReview": "listed",
+    "photo": {
+      "file": "sweet-corn",
+      "alt": "Plain boiled yellow corn cob halves on a white plate",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "kcal": null,
+    "allergens": [
+      "eggs"
+    ],
+    "id": "tortang-talong",
+    "name": "Tortang talong",
+    "aliases": [
+      "Filipino eggplant omelette"
+    ],
+    "tags": [
+      "savory",
+      "filling"
+    ],
+    "description": "Smoky eggplant flattened and fried in a golden egg coating.",
+    "serving": "1 small omelette",
+    "ingredients": [
+      "eggplant",
+      "egg",
+      "oil",
+      "salt"
+    ],
+    "steps": [
+      "Grill or roast the eggplant until the flesh is soft. Cool, peel and flatten it, keeping the stem.",
+      "Dip the eggplant in beaten egg seasoned with salt, then pan-fry both sides in canola oil until the egg is fully set."
+    ],
+    "dishId": "tortang-talong",
+    "cuisine": "Filipino",
+    "price": null,
+    "ingredientReview": "listed",
+    "photo": {
+      "file": "tortang-talong",
+      "alt": "Flattened Filipino eggplant omelette with its stem and golden egg coating",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "leche-flan",
+    "dishId": "leche-flan",
+    "name": "Leche flan",
+    "aliases": [
+      "Filipino caramel custard"
+    ],
+    "cuisine": "Filipino",
+    "tags": [
+      "sweet"
+    ],
+    "serving": "1 slice",
+    "description": "Smooth Filipino caramel custard with amber syrup.",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "leche-flan",
+      "alt": "Golden oval custard with a glossy caramel top",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "tiramisu",
+    "dishId": "tiramisu",
+    "name": "Tiramisu",
+    "aliases": [
+      "Coffee mascarpone dessert"
+    ],
+    "cuisine": "Italian",
+    "tags": [
+      "sweet"
+    ],
+    "serving": "1 slice",
+    "description": "Coffee-soaked layers, mascarpone, and a cocoa finish.",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "tiramisu",
+      "alt": "Square layered tiramisu with cocoa dusting",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "chocolate-cake",
+    "dishId": "chocolate-cake",
+    "name": "Chocolate cake",
+    "aliases": [
+      "Cake",
+      "Chocolate layer cake"
+    ],
+    "cuisine": "Global",
+    "tags": [
+      "sweet",
+      "filling"
+    ],
+    "serving": "1 slice",
+    "description": "Chocolate sponge layered with chocolate frosting.",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "chocolate-cake",
+      "alt": "Triangular slice of dark chocolate layer cake",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "potato-chips",
+    "dishId": "potato-chips",
+    "name": "Potato chips",
+    "aliases": [
+      "Chips",
+      "Crisps"
+    ],
+    "cuisine": "Global",
+    "tags": [
+      "crispy",
+      "savory",
+      "light"
+    ],
+    "serving": "1 small handful",
+    "description": "Thin, salty potato crisps that snap when you bite.",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "potato-chips",
+      "alt": "A bowl of ridged golden potato chips",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "pancit-canton",
+    "dishId": "pancit-canton",
+    "name": "Pancit canton",
+    "aliases": [
+      "Noodles",
+      "Stir-fried noodles"
+    ],
+    "cuisine": "Filipino",
+    "tags": [
+      "savory",
+      "filling"
+    ],
+    "serving": "1 small plate",
+    "description": "Filipino stir-fried noodles with thinly sliced vegetables.",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "pancit-canton",
+      "alt": "A plate of stir-fried canton noodles with vegetables",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "udon",
+    "dishId": "udon",
+    "name": "Kake udon",
+    "aliases": [
+      "Udon",
+      "Japanese thick noodles"
+    ],
+    "cuisine": "Japanese",
+    "tags": [
+      "savory",
+      "filling"
+    ],
+    "serving": "1 bowl",
+    "description": "Thick, chewy noodles in a warm, clear broth.",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "udon",
+      "alt": "Thick udon noodles in a light broth with scallions",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "mochi",
+    "dishId": "mochi",
+    "name": "Daifuku mochi",
+    "aliases": [
+      "Mochi",
+      "Red bean mochi"
+    ],
+    "cuisine": "Japanese",
+    "tags": [
+      "sweet",
+      "light"
+    ],
+    "serving": "1 piece",
+    "description": "Soft, chewy rice dough around a sweet red bean filling.",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "mochi",
+      "alt": "A cut daifuku mochi showing the red bean filling",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "bubble-gum",
+    "dishId": "bubble-gum",
+    "name": "Bubble gum",
+    "aliases": [
+      "Gum",
+      "Chewing gum"
+    ],
+    "cuisine": "Global",
+    "tags": [
+      "sweet",
+      "light"
+    ],
+    "serving": "1 piece",
+    "description": "A sweet, chewy bubble-gum treat.",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "bubble-gum",
+      "alt": "Pink bubble gum cubes beside plain wrappers",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "hard-candy",
+    "dishId": "hard-candy",
+    "name": "Fruit hard candy",
+    "aliases": [
+      "Candy",
+      "Sweets",
+      "Fruit drops"
+    ],
+    "cuisine": "Global",
+    "tags": [
+      "sweet",
+      "light"
+    ],
+    "serving": "1 piece",
+    "description": "A fruit-flavored candy with a hard, glossy shell.",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "hard-candy",
+      "alt": "Colorful translucent fruit-flavored hard candies",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "burger-steak",
+    "dishId": "burger-steak",
+    "name": "Burger steak with rice",
+    "aliases": [],
+    "cuisine": "Filipino",
+    "tags": [
+      "savory",
+      "filling"
+    ],
+    "serving": "1 plate",
+    "description": "A burger patty with gravy, served with steamed rice.",
+    "sourceUrl": "https://help.jollibee.com.ph/hc/en-ph/articles/12483672999311-Jollibee-Kids-Party-Menu-Overview",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "burger-steak",
+      "alt": "Gravy-covered burger steak beside a serving of rice",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "peach-mango-pie",
+    "dishId": "peach-mango-pie",
+    "name": "Peach mango hand pie",
+    "aliases": [],
+    "cuisine": "Filipino",
+    "tags": [
+      "crispy",
+      "sweet",
+      "light"
+    ],
+    "serving": "1 pie",
+    "description": "A small crisp fried pastry filled with peach and mango.",
+    "sourceUrl": "https://help.jollibee.com.ph/hc/en-ph/articles/12483672999311-Jollibee-Kids-Party-Menu-Overview",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "peach-mango-pie",
+      "alt": "Crisp hand pie cut to show its peach and mango filling",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "asado-siopao",
+    "dishId": "asado-siopao",
+    "name": "Asado siopao",
+    "aliases": [],
+    "cuisine": "Filipino",
+    "tags": [
+      "savory",
+      "filling"
+    ],
+    "serving": "1 bun",
+    "description": "A fluffy steamed bun with a savory-sweet asado pork filling.",
+    "sourceUrl": "https://www.chowking.ph/menu",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "asado-siopao",
+      "alt": "White steamed siopao buns with a pork filling",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "siomai",
+    "dishId": "siomai",
+    "name": "Pork siomai",
+    "aliases": [],
+    "cuisine": "Filipino",
+    "tags": [
+      "savory",
+      "light"
+    ],
+    "serving": "1 small order",
+    "description": "Open-top steamed dumplings with a savory pork filling.",
+    "sourceUrl": "https://www.chowking.ph/menu",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "siomai",
+      "alt": "Four open-top steamed siomai dumplings",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "buchi",
+    "dishId": "buchi",
+    "name": "Buchi",
+    "aliases": [],
+    "cuisine": "Filipino",
+    "tags": [
+      "crispy",
+      "sweet",
+      "light"
+    ],
+    "serving": "1 piece",
+    "description": "A golden sesame-coated rice ball with a sweet filling.",
+    "sourceUrl": "https://www.chowking.ph/promos/3533",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "buchi",
+      "alt": "Golden sesame balls with dark red bean filling",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "korean-corn-dog",
+    "dishId": "korean-corn-dog",
+    "name": "Korean corn dog",
+    "aliases": [],
+    "cuisine": "Korean",
+    "tags": [
+      "crispy",
+      "savory",
+      "filling"
+    ],
+    "serving": "1 skewer",
+    "description": "A fried breaded hot dog on a stick, often served with cheese or sauce.",
+    "sourceUrl": "https://www.7-eleven.com.ph/products-category/crunch-time/",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "korean-corn-dog",
+      "alt": "Crispy breaded Korean corn dog on a stick",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  },
+  {
+    "id": "cheese-ensaymada",
+    "dishId": "cheese-ensaymada",
+    "name": "Cheese ensaymada",
+    "aliases": [],
+    "cuisine": "Filipino",
+    "tags": [
+      "sweet",
+      "filling"
+    ],
+    "serving": "1 bun",
+    "description": "A soft sweet bun with buttery toppings and grated cheese.",
+    "sourceUrl": "https://www.goldilocks.com.ph/mobile/products/bakeshop/snacks-pasalubong",
+    "kcal": null,
+    "price": null,
+    "ingredients": [],
+    "allergens": [],
+    "ingredientReview": "incomplete",
+    "steps": [],
+    "photo": {
+      "file": "cheese-ensaymada",
+      "alt": "A soft round ensaymada with grated cheese",
+      "kind": "illustration",
+      "credit": "BiteMatch"
+    }
+  }
+]

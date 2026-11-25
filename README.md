@@ -2,11 +2,11 @@
 
 A mobile and desktop web app for finding food that fits what you’re craving and what you can spend today.
 
-Open `index.html` in a browser for a local preview. Serve the repository root on HTTPS or localhost to test installation and offline access. BiteMatch keeps answers in the current page session and uses five sample dishes with illustrative prices and calories. The food photos were generated for the prototype.
+Serve the repository root on HTTPS or localhost to preview BiteMatch. The online catalog is queried six dishes at a time. The current set covers pantry options, fast food, desserts, packaged snacks, and noodle dishes. Catalog images are generated illustrations. Prices and calorie estimates are labeled when available. See [catalog maintenance and research](catalog/README.md).
 
 ## Install BiteMatch
 
-On Android or desktop Chrome/Edge, use **Install app** when it appears. On iPhone, Safari can add BiteMatch to the Home Screen. On Mac, use **File → Add to Dock** in Safari. Once the app has downloaded its files online, the sample catalog and matching flow also work offline.
+On Android or desktop Chrome/Edge, use **Install app** when it appears. On iPhone, Safari can add BiteMatch to the Home Screen. On Mac, use **File → Add to Dock** in Safari. After the first online visit completes its offline download, five starter dishes remain available offline.
 
 ## Try the ₱0 flow
 

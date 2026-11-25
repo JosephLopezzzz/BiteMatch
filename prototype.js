@@ -14,41 +14,19 @@ const cues = [
 ];
 const ingredients = {
   banana: "Banana", sugar: "Sugar", oil: "Canola oil", wrapper: "Spring roll wrappers",
-  potato: "Potato", salt: "Salt", rice: "Cooked rice", garlic: "Garlic", mango: "Ripe mango"
+  potato: "Potato", salt: "Salt", rice: "Cooked rice", garlic: "Garlic", mango: "Ripe mango",
+  saba: "Saba bananas", "purple-sweet-potato": "Purple sweet potato", "sweet-corn": "Sweet corn",
+  eggplant: "Eggplant", egg: "Egg"
 };
 const allergies = {
   peanuts: "Peanuts", nuts: "Tree nuts", milk: "Milk", eggs: "Eggs", wheat: "Wheat",
   soy: "Soy", sesame: "Sesame", fish: "Fish", shellfish: "Shellfish"
 };
-const foods = [
-  { id: "turon", name: "Banana turon", image: "turon", tags: ["crispy", "sweet", "filling"],
-    description: "A crackly wrapper around warm, sweet banana.",
-    serving: "1 roll", kcal: [160, 220], price: [15, 35], ingredients: ["banana", "sugar", "oil", "wrapper"],
-    allergens: ["wheat"], incompleteIngredients: true,
-    steps: ["Roll sliced banana and a little sugar in a spring roll wrapper.", "Pan-fry until golden, then drain and let it cool briefly."] },
-  { id: "banana-chips", name: "Banana chips", image: "banana-chips", tags: ["crispy", "sweet", "light"],
-    description: "Thin banana slices with a sweet crunch.",
-    serving: "1 small handful", kcal: [140, 190], price: [25, 55], ingredients: ["banana", "sugar", "oil"],
-    allergens: [], steps: ["Slice a firm banana thinly.", "Fry the slices until crisp, drain, and toss with a little sugar."] },
-  { id: "potatoes", name: "Crispy potato bites", image: "potatoes", tags: ["crispy", "savory", "filling"],
-    description: "Golden, salty edges with a soft potato center.",
-    serving: "1 small bowl", kcal: [190, 280], price: [45, 85], ingredients: ["potato", "oil", "salt"],
-    allergens: [], steps: ["Cut the potato into small cubes and pat them dry.", "Pan-fry until golden on all sides, then season with salt."] },
-  { id: "rice", name: "Garlic fried rice", image: "rice", tags: ["savory", "filling"],
-    description: "A cozy bowl of sinangag with toasted garlic.",
-    serving: "1 small bowl", kcal: [230, 340], price: [35, 75], ingredients: ["rice", "garlic", "oil", "salt"],
-    allergens: [], steps: ["Sauté chopped garlic in a little oil.", "Add cooked rice, stir over high heat, and season with salt."] },
-  { id: "mango", name: "Chilled ripe mango", image: "mango", tags: ["sweet", "fresh", "light"],
-    description: "Cool, juicy slices of ripe mango.",
-    serving: "1 small bowl", kcal: [95, 150], price: [30, 70], ingredients: ["mango"],
-    allergens: [], steps: ["Slice a ripe mango and chill it for a few minutes.", "Scoop the flesh into a bowl."] }
-];
-
 function newSession() {
   return {
     step: "start", cues: new Set(), mode: "buy", budget: "", calories: "", kcalMode: "target",
     allergies: new Set(), pantry: new Set(), skipped: [], refine: "", broadened: false,
-    editing: false, picked: null, allergyUnknown: false
+    editing: false, picked: null, allergyUnknown: false, deck: null
   };
 }
 
@@ -57,36 +35,99 @@ let moving = false;
 const cueName = id => cues.find(cue => cue[0] === id)?.[1] ?? id;
 const realCues = () => [...session.cues].filter(cue => cue !== "unsure");
 const atHome = () => session.mode === "home" || session.budget === "0";
-const photo = food => "assets/food/" + food.image + ".webp";
 const didPickCue = id => session.cues.has(id);
 const cueMatch = food => realCues().filter(cue => food.tags.includes(cue));
+const escaped = value => String(value).replace(/[&<>"']/g, char =>
+  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
 
-function eligible(food) {
-  if (session.allergyUnknown) return false;
-  if (session.allergies.size &&
-    (!atHome() || food.incompleteIngredients || food.allergens.some(allergen => session.allergies.has(allergen)))) return false;
-  if (atHome() && !food.ingredients.every(item => session.pantry.has(item))) return false;
-  if (!atHome() && session.budget !== "" && food.price[1] > Number(session.budget)) return false;
-  if (session.calories !== "" && session.kcalMode === "max" && food.kcal[1] > Number(session.calories)) return false;
-  return true;
+function matchPreferences() {
+  const number = value => value === "" ? null : Number(value);
+  return {
+    home: atHome(), cues: realCues().sort(), broadened: session.broadened, refine: session.refine,
+    budget: number(session.budget), kcalMax: session.kcalMode === "max" ? number(session.calories) : null,
+    kcalTarget: session.kcalMode === "target" ? number(session.calories) : null,
+    pantry: [...session.pantry].sort(), allergies: [...session.allergies].sort(), allergyUnknown: session.allergyUnknown
+  };
 }
 
-function kcalDistance(food) {
-  if (session.calories === "" || session.kcalMode !== "target") return 0;
-  const target = Number(session.calories);
-  return Math.max(food.kcal[0] - target, target - food.kcal[1], 0);
+function ensureDeck() {
+  const preferences = matchPreferences();
+  const key = JSON.stringify(preferences);
+  if (session.deck?.key !== key) {
+    session.deck?.controller.abort();
+    session.deck = {
+      key, preferences, items: [], next: 0, controller: new AbortController(), source: null,
+      pending: false, error: false, hadMatches: false, hasAlternatives: false, revision: null, preloaded: null
+    };
+  }
+  return session.deck;
 }
 
-function rankedFoods() {
-  const matching = foods.filter(food => eligible(food) &&
-    (session.broadened || !realCues().length || cueMatch(food).length > 0));
-  return matching.sort((first, second) => {
-    const byRefinement = Number(second.tags.includes(session.refine)) - Number(first.tags.includes(session.refine));
-    return byRefinement || cueMatch(second).length - cueMatch(first).length || kcalDistance(first) - kcalDistance(second);
-  });
+function preloadNext(deck) {
+  const next = BiteCatalog.photoSource(deck.items[1] ?? {});
+  if (!next || next.src === deck.preloaded) return;
+  deck.preloaded = next.src;
+  const image = new Image();
+  image.sizes = next.sizes;
+  image.srcset = next.srcset;
+  image.src = next.src;
 }
 
-const deckItems = () => rankedFoods().filter(food => !session.skipped.includes(food.id));
+async function loadMatches(deck) {
+  if (deck.pending || deck.error || deck.next === null || deck.items.length > 2) return;
+  deck.pending = true;
+  try {
+    while (deck.next !== null && deck.items.length < 3) {
+      const pageStart = deck.next;
+      const page = await BiteCatalog.requestPage(deck.preferences, pageStart, deck.source, deck.controller.signal);
+      if (session.deck !== deck) return;
+      if (pageStart > 0 && deck.source === page.source && deck.revision !== page.revision) {
+        deck.next = 0;
+        deck.revision = page.revision;
+        continue;
+      }
+      deck.source = page.source;
+      deck.next = page.next;
+      deck.revision = page.revision;
+      deck.hasAlternatives = page.hasAlternatives;
+      deck.hadMatches ||= page.items.length > 0;
+      const ignored = new Set([...deck.items, ...session.skipped.map(item => item.food)].map(food => food.dishId));
+      for (const food of page.items) {
+        if (ignored.has(food.dishId)) continue;
+        deck.items.push(food);
+        ignored.add(food.dishId);
+      }
+    }
+  } catch (error) {
+    if (!deck.controller.signal.aborted) deck.error = true;
+  } finally {
+    deck.pending = false;
+    if (session.deck === deck && session.step === "matches") {
+      const displayed = app.querySelector("#food-card");
+      if (!displayed) {
+        render();
+        if (deck.items[0]) announcement.textContent = `Next match: ${deck.items[0].name}.`;
+      } else {
+        app.querySelector(".deck-stage").dataset.next = String(deck.items.length > 1);
+        app.querySelector("#match-feed").textContent = matchCount(deck);
+        app.querySelector(".catalog-notice").hidden = deck.source !== "starter";
+        preloadNext(deck);
+      }
+    }
+  }
+}
+
+function photoMarkup(food, picked = false) {
+  const source = BiteCatalog.photoSource(food);
+  const alt = escaped(food.photo?.alt || food.name);
+  return `<div class="dish-photo ${picked ? "pick-image" : ""}" ${source ? "" : 'data-missing="true"'}>
+    ${source ? `<img src="${source.src}" srcset="${source.srcset}" sizes="${source.sizes}" alt="${alt}" draggable="false">` : ""}
+    <span class="photo-unavailable">Photo unavailable</span>
+    ${food.photo?.kind === "illustration" ? '<span class="photo-credit">Food illustration</span>' : ""}
+  </div>`;
+}
+
+const deckItems = () => session.deck?.items ?? [];
 const arrow = '<span class="arrow" aria-hidden="true">→</span>';
 
 function action(label, id, modifier = "") {
@@ -125,10 +166,11 @@ function startPage() {
       <p class="lead desktop-only">Tell us what sounds good and what fits today. We’ll help you pick something to eat.</p>
       <p class="lead phone-only">Crispy, sweet, or still figuring it out? Find a bite that fits today.</p>
       ${action("Help me pick " + arrow, "craving")}
-      <p class="hint">Your answers stay in this session.</p>
+      <p class="hint">No sign-in needed.</p>
     </div>
     <figure class="feature-photo">
-      <img src="assets/food/turon.webp" alt="Golden banana turon with a crisp wrapper">
+      <img src="assets/food/turon-800.webp" srcset="assets/food/turon-400.webp 400w, assets/food/turon-800.webp 800w, assets/food/turon.webp 1440w"
+        sizes="(max-width: 820px) calc(100vw - 60px), 650px" alt="Golden banana turon with a crisp wrapper">
       <span class="sparkle" aria-hidden="true">✦</span>
       <figcaption><strong>Banana turon</strong><small>Sweet · Crispy</small></figcaption>
     </figure>
@@ -190,11 +232,13 @@ function pantryPage() {
 }
 
 function foodCost(food) {
-  return atHome() ? "₱0 to spend" : `₱${food.price[0]}–₱${food.price[1]} est.`;
+  return atHome() ? "₱0 to spend" : food.price ? `₱${food.price[0]}–₱${food.price[1]} est.` : "Local price unavailable";
 }
 
 function facts(food) {
-  return `${foodCost(food)} · ${food.kcal[0]}–${food.kcal[1]} kcal est. · ${food.serving}`;
+  const calories = !food.kcal ? "Calories unavailable" : food.kcal[0] === food.kcal[1] ? `${food.kcal[0]} kcal est.` :
+    `${food.kcal[0]}–${food.kcal[1]} kcal est.`;
+  return `${foodCost(food)} · ${calories} · ${escaped(food.serving)}`;
 }
 
 function context() {
@@ -212,33 +256,50 @@ function why(food) {
   return session.broadened ? "An alternative within your current limits." : "Fits the limits you set for today.";
 }
 
+function catalogNotice() {
+  return `<p class="hint catalog-notice" ${session.deck.source === "starter" ? "" : "hidden"}>Using the five-dish starter catalog.</p>`;
+}
+
 function emptyPage() {
-  const exhausted = rankedFoods().length > 0;
-  const lastSkip = foods.find(food => food.id === session.skipped.at(-1));
-  const alternatives = !session.broadened && realCues().length &&
-    foods.some(food => eligible(food) && !session.skipped.includes(food.id));
-  const reason = exhausted ? `Skipped ${lastSkip.name}. You’ve seen every match in this round.`
+  const lastSkip = session.skipped.at(-1)?.food;
+  const exhausted = session.deck.hadMatches && lastSkip;
+  const reason = exhausted ? `Skipped ${escaped(lastSkip.name)}. You’ve seen every match in this round.`
     : session.allergyUnknown ? "This demo can’t assess the extra ingredient you selected."
     : atHome() ? "We couldn’t find a match using your selected ingredients and limits."
     : "We couldn’t find a match within the limits you set.";
   const controls = [
     exhausted ? action("Undo last skip", "undo", "secondary") : "",
-    alternatives ? action("Broaden my craving", "broaden") : "",
+    session.deck.hasAlternatives ? action("Broaden my craving", "broaden") : "",
     atHome() ? action("Add ingredients", "edit-pantry", "secondary") : "",
     action("Edit my limits", "edit-limits", "secondary"),
     quiet("Edit my craving", "craving")
   ].join("");
   return workspace("Step 3 of 3 · Matches", 3, exhausted ? "That’s the deck." : "No matches yet.", reason,
     `<div class="panel step-in"><span class="empty-mark" aria-hidden="true">✧</span>${context()}
-      <p class="hint">Your budget and ingredient exclusions are still in effect.</p><div class="empty-actions">${controls}</div></div>`,
+      <p class="hint">Your budget and ingredient exclusions are still in effect.</p>${catalogNotice()}
+      <div class="empty-actions">${controls}</div></div>`,
     "results");
 }
 
+function matchCount(deck) {
+  if (deck.next !== null) return "More dishes available";
+  const count = deck.items.length;
+  return `${count} match${count === 1 ? "" : "es"} left`;
+}
+
 function matchesPage() {
+  const deck = session.deck;
   const remaining = deckItems();
   const food = remaining[0];
+  if (!food && (deck.error || deck.next !== null)) {
+    const title = deck.error ? "Matches couldn’t load" : "Finding your next bite";
+    const message = deck.error ? "Check your connection, then try again." : "Checking the catalog against what fits today.";
+    return workspace("Step 3 of 3 · Matches", 3, title, message,
+      `<div class="panel step-in" role="status">${deck.error ? action("Try again", "retry-matches") :
+        '<p class="hint">Loading dishes…</p>'}${quiet("Edit limits", "edit-limits")}</div>`, "results");
+  }
   if (!food) return emptyPage();
-  const lastSkip = foods.find(item => item.id === session.skipped.at(-1));
+  const lastSkip = session.skipped.at(-1)?.food;
   const refine = session.skipped.length >= 2 && !session.refine
     ? `<div class="refine"><h2>Would lighter or more filling sound better?</h2><div class="chips">
         ${choice("Lighter", "light", "refine", false)}${choice("More filling", "filling", "refine", false)}
@@ -247,39 +308,43 @@ function matchesPage() {
   return workspace("Step 3 of 3 · Matches", 3,
     '<span class="desktop-only">Does this hit the spot?</span><span class="phone-only">Your next bite</span>',
     '<span class="desktop-only">Swipe left to skip, or swipe right if this is your pick.</span><span class="phone-only"><span aria-hidden="true">↔</span> Swipe left or right to skip</span>',
-    `<div class="panel deck step-in">${context()}${refine}
-      <div class="card-meta"><span>${remaining.length} match${remaining.length === 1 ? "" : "es"} left</span>
+    `<div class="panel deck step-in">${context()}${refine}${catalogNotice()}
+      <div class="card-meta"><span id="match-feed">${matchCount(deck)}</span>
         ${session.skipped.length ? quiet("Undo skip", "undo") : ""}</div>
       <div class="deck-stage" data-next="${remaining.length > 1}">
         <article id="food-card" class="food-card" aria-label="Current suggestion">
-          <img src="${photo(food)}" alt="${food.name}" draggable="false">
+          ${photoMarkup(food)}
           <div class="swipe-feedback" aria-hidden="true">
             <span class="swipe-progress">Swipe to skip</span>
             <span class="swipe-ready">Release to skip</span>
             <span class="swipe-done">Skipped</span>
           </div>
-          <div class="food-info"><h2>${food.name}</h2><p>${food.description}</p><p>${why(food)}</p>
+          <div class="food-info"><h2>${escaped(food.name)}</h2><p>${escaped(food.description)}</p><p>${why(food)}</p>
             <p class="facts">${facts(food)}</p></div>
         </article>
       </div>
       <div class="deck-controls">${action("Skip", "skip", "secondary")}${action("I’ll eat this " + arrow, "pick")}</div>
-      ${lastSkip ? `<p class="hint skip-receipt phone-only">Skipped ${lastSkip.name}. Swipe again or tap a button.</p>` : ""}
+      ${lastSkip ? `<p class="hint skip-receipt phone-only">Skipped ${escaped(lastSkip.name)}.</p>` : ""}
       <div class="edit-row">${quiet("Edit limits", "edit-limits")}${quiet("Edit craving", "craving")}</div>
-      <p class="hint deck-note">Demo estimates per serving. Check actual prices and ingredients before choosing.</p>
+      <p class="hint deck-note">Estimates are per serving. Check actual prices and ingredients before choosing.</p>
     </div>`, "results");
 }
 
 function pickedPage() {
   const food = session.picked;
   const prep = atHome()
-    ? `<h3>What you’ll use</h3><p>${food.ingredients.map(item => ingredients[item]).join(", ")}</p>
-      <h3>How to make it</h3><ol>${food.steps.map(step => `<li>${step}</li>`).join("")}</ol>
+    ? `<h3>What you’ll use</h3><p>${food.ingredients.map(item => escaped(ingredients[item] ?? item)).join(", ")}</p>
+      <h3>How to make it</h3><ol>${food.steps.map(step => `<li>${escaped(step)}</li>`).join("")}</ol>
       <p class="hint">Verify packaged ingredient labels and check your preparation surfaces for cross-contact.</p>`
-    : `<h3>What to look for</h3><p>Ask for ${food.name.toLowerCase()}. The price and calories shown are demo estimates for one serving.</p>`;
+    : `<h3>What to look for</h3><p>Ask for ${escaped(food.name.toLowerCase())}. Prices, ingredients, and servings vary by seller.</p>`;
+  const source = food.nutritionSource;
+  const nutrition = source?.url?.startsWith("https://")
+    ? `<p class="hint"><a href="${escaped(source.url)}">Nutrition source · ${escaped(source.label)}</a></p>`
+    : source ? `<p class="hint">Nutrition source · ${escaped(source.label)}</p>` : "";
   return workspace("Your pick", 3, "You found<br><span class=\"accent\">your bite.</span>", why(food),
-    `<div class="panel step-in"><img class="pick-image" src="${photo(food)}" alt="${food.name}">
-      <h2 class="pick-title">${food.name}</h2><p class="hint">${facts(food)}</p>
-      <div class="details">${prep}</div><div class="form-actions">${quiet("Back to matches", "matches")}
+    `<div class="panel step-in">${photoMarkup(food, true)}
+      <h2 class="pick-title">${escaped(food.name)}</h2><p class="hint">${facts(food)}</p>
+      <div class="details">${prep}${nutrition}</div><div class="form-actions">${quiet("Back to matches", "matches")}
         ${action("Start over " + arrow, "reset")}</div></div>`, "results");
 }
 
@@ -293,7 +358,16 @@ function render(focus = true) {
   restart.hidden = session.step === "start";
   siteHeader.classList.toggle("in-session", session.step !== "start");
   const card = app.querySelector("#food-card");
-  if (card) enableSwipe(card);
+  if (card) {
+    enableSwipe(card);
+    preloadNext(session.deck);
+  }
+  const dishImage = app.querySelector(".dish-photo img");
+  if (dishImage) {
+    const missing = () => { dishImage.parentElement.dataset.missing = "true"; };
+    dishImage.addEventListener("error", missing, { once: true });
+    if (dishImage.complete && !dishImage.naturalWidth) missing();
+  }
   if (focus) {
     window.scrollTo(0, 0);
     app.querySelector("#screen-title").focus({ preventScroll: true });
@@ -303,11 +377,16 @@ function render(focus = true) {
 function go(step) {
   moving = false;
   session.step = step;
-  if (step === "matches") session.editing = false;
+  if (step === "matches") {
+    session.editing = false;
+    ensureDeck();
+  }
   render();
+  if (step === "matches") void loadMatches(session.deck);
 }
 
 function reset() {
+  session.deck?.controller.abort();
   session = newSession();
   go("start");
 }
@@ -361,7 +440,7 @@ function selectOption(button) {
       break;
     case "refine":
       session.refine = option;
-      render();
+      go("matches");
       break;
   }
 }
@@ -377,10 +456,13 @@ function skip(direction = -1) {
   card.classList.add("leaving");
   window.setTimeout(() => {
     if (!app.contains(card)) return;
-    session.skipped.push(food.id);
+    session.deck.items.shift();
+    session.skipped.push({ food, key: session.deck.key });
     go("matches");
     const nextFood = deckItems()[0];
-    announcement.textContent = `Skipped ${food.name}. ${nextFood ? `Next match: ${nextFood.name}.` : "You’ve reached the end of the matches."}`;
+    const status = nextFood ? `Next match: ${nextFood.name}.` : session.deck.next !== null ?
+      "Loading more matches." : "You’ve reached the end of the matches.";
+    announcement.textContent = `Skipped ${food.name}. ${status}`;
   }, reducedMotion.matches ? 0 : 240);
 }
 
@@ -458,7 +540,19 @@ app.addEventListener("click", event => {
       go("matches");
       break;
     case "undo":
-      session.skipped.pop();
+      {
+        const skipped = session.skipped.pop();
+        if (skipped?.key === session.deck.key) {
+          session.deck.items = [skipped.food, ...deckItems().filter(food => food.dishId !== skipped.food.dishId)];
+        } else {
+          session.deck.controller.abort();
+          session.deck = null;
+        }
+      }
+      go("matches");
+      break;
+    case "retry-matches":
+      session.deck.error = false;
       go("matches");
       break;
     case "skip": skip(); break;

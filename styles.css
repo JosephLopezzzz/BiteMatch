@@ -235,6 +235,31 @@ input[type="number"] { min-width: 0; width: 100%; min-height: 46px; background: 
   transition: transform .24s cubic-bezier(.35,0,.62,1), opacity .24s ease-in;
 }
 .food-card img { width: 100%; height: clamp(194px, 29vw, 324px); object-fit: cover; user-select: none; pointer-events: none; }
+.dish-photo { position: relative; background: var(--cream); overflow: hidden; }
+.food-card .dish-photo { min-height: clamp(194px, 29vw, 324px); }
+.photo-unavailable {
+  display: none;
+  position: absolute;
+  inset: 0;
+  place-items: center;
+  padding: 12px;
+  color: var(--muted);
+  font-weight: 700;
+}
+.dish-photo[data-missing="true"] .photo-unavailable { display: grid; }
+.dish-photo[data-missing="true"] img, .dish-photo[data-missing="true"] .photo-credit { visibility: hidden; }
+.photo-credit {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  padding: 3px 8px;
+  border-radius: 99px;
+  background: var(--white);
+  color: var(--ink);
+  font-size: .73rem;
+  font-weight: 700;
+}
+.catalog-notice { margin: 0 0 8px; }
 .swipe-feedback { display: none; }
 .food-info { padding: 17px 19px 19px; }
 .food-info h2, .pick-title { margin: 0 0 7px; font-size: clamp(1.65rem, 3.3vw, 2.75rem); letter-spacing: -.055em; line-height: 1.03; }
@@ -246,6 +271,7 @@ input[type="number"] { min-width: 0; width: 100%; min-height: 46px; background: 
 .refine { margin: 0 0 12px; border: 1px solid #e9b5af; background: #fff1ee; padding: 11px; border-radius: 12px; }
 .refine h2 { margin: 0 0 8px; font-size: 1rem; }
 .pick-image { width: 100%; height: clamp(165px, 20vw, 252px); object-fit: cover; border-radius: 14px; margin-bottom: 16px; }
+.pick-image img { width: 100%; height: 100%; object-fit: cover; }
 .details { border-top: 1px solid var(--line); margin-top: 16px; padding-top: 14px; }
 .details h3 { font-size: 1rem; margin-bottom: 7px; }
 .details p, .details ol { color: var(--muted); line-height: 1.45; margin: 0 0 10px; }
@@ -355,6 +381,7 @@ input[type="number"] { min-width: 0; width: 100%; min-height: 46px; background: 
   .food-card.leaving .swipe-feedback { background: var(--red); color: white; }
   .food-card.leaving .swipe-progress, .food-card.leaving .swipe-ready { display: none; }
   .food-card img { height: clamp(160px, 47vw, 242px); }
+  .food-card .dish-photo { min-height: clamp(160px, 47vw, 242px); }
   .food-info { padding: 12px 14px 14px; }
   .food-info p { margin-bottom: 6px; }
   .food-info .facts { font-size: .85rem; }
